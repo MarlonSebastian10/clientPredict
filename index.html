@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulario de Diabetes</title>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(to right, #00c6ff, #0072ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .container {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        width: 350px;
+        text-align: center;
+      }
+      h2 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+        text-align: left;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+      button {
+        width: 100%;
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 12px;
+        margin-top: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        transition: background 0.3s;
+      }
+      button:hover {
+        background: #218838;
+      }
+      .result {
+        margin-top: 20px;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Formulario de Diabetes</h2>
+      <form id="diabetesForm">
+        <label
+          >Pregnancies: <input type="number" name="Pregnancies" required
+        /></label>
+        <label>Glucose: <input type="number" name="Glucose" required /></label>
+        <label
+          >Blood Pressure: <input type="number" name="BloodPressure" required
+        /></label>
+        <label
+          >Skin Thickness: <input type="number" name="SkinThickness" required
+        /></label>
+        <label>Insulin: <input type="number" name="Insulin" required /></label>
+        <label
+          >BMI: <input type="number" step="0.1" name="BMI" required
+        /></label>
+        <label
+          >Diabetes Pedigree Function:
+          <input
+            type="number"
+            step="0.001"
+            name="DiabetesPedigreeFunction"
+            required
+        /></label>
+        <label>Age: <input type="number" name="Age" required /></label>
+        <button type="submit">Predecir</button>
+      </form>
+      <div id="result" class="result">Resultado: --</div>
+    </div>
+
+    <script>
+      document
+        .getElementById("diabetesForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const formData = new FormData(event.target);
+          const data = Object.fromEntries(formData.entries());
+
+          fetch("https://deploydiabetes-htrn.onrender.com/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("result").innerText =
+                "Resultado: " + JSON.stringify(data);
+              document.getElementById("result").style.display = "block";
+            })
+            .catch((error) => {
+              document.getElementById("result").innerText = "Error: " + error;
+              document.getElementById("result").style.display = "block";
+            });
+        });
+    </script>
+  </body>
+</html>
